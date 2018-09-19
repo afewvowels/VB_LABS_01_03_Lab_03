@@ -1,8 +1,14 @@
-﻿'Project: Lab #3
+﻿' Keith Smith
+
+'Project: Lab #3
 'Author: Anthony DePinto 
 'Date: Fall 2014
 'Description: Analysis of grades
 '
+
+Option Explicit On
+Option Strict On
+
 Public Class AnalysisForm
     Private Sub SubmitResultButton_Click(sender As Object, e As EventArgs) Handles SubmitResultButton.Click
         ' Define variables
@@ -28,8 +34,10 @@ Public Class AnalysisForm
         End Select
 
         ' Regardless of correct or incorrect data entry, clear TextBox and reset Focus
-        ResultTextBox.Clear()
-        ResultTextBox.Focus()
+        With ResultTextBox
+            .Clear()
+            .Focus()
+        End With
 
         ' Check if ListBox has reached 10 items, which disables this button
         ' and enables the Analyze Results button
@@ -37,37 +45,37 @@ Public Class AnalysisForm
             ResultTextBox.Enabled = False
             SubmitResultButton.Enabled = False
             AnalyzeResultsButton.Enabled = True
+            AnalyzeResultsButton.Focus()
         End If
     End Sub
 
     Private Sub AnalyzeResultsButton_Click(sender As Object, e As EventArgs) Handles AnalyzeResultsButton.Click
         ' Declare variables
-        Dim PInteger As Integer = 0
-        Dim FInteger As Integer = 0
+        Dim PInteger As Integer
+        Dim FInteger As Integer
 
         ' Run For Next loop through contents of ResultsListBox and count total number
         ' of 'P's and 'F's
         For CounterInteger As Integer = 0 To (ResultsListBox.Items.Count - 1) Step 1
-            Select Case ResultsListBox.Items.Item(CounterInteger).ToString
+            Select Case ResultsListBox.Items(CounterInteger).ToString
                 Case "P"
                     PInteger += 1
                 Case "F"
                     FInteger += 1
                 Case Else
                     MessageBox.Show("Invalid grade entry detected",
-                                "Bad Data",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation)
+                                    "Bad Data",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Exclamation)
             End Select
         Next CounterInteger
         ' End For Next loop
 
         ' Output results of two counter variables
-        AnalysisResultsLabel.Text = "There were " & PInteger.ToString & " passing grades and " & FInteger.ToString & " failing grades."
+        AnalysisResultsLabel.Text = "Passed: " & PInteger.ToString & ControlChars.NewLine & "Failed: " & FInteger.ToString
 
-        ' Once analysis is complete disable
+        ' Once analysis is complete disable (only analyze once)
         AnalyzeResultsButton.Enabled = False
-
     End Sub
 
     Private Sub ClearResultsButton_Click(sender As Object, e As EventArgs) Handles ClearResultsButton.Click
@@ -75,10 +83,12 @@ Public Class AnalysisForm
         ResultsListBox.Items.Clear()
 
         ' Reverse button enabling/disabling to reset application
-        ResultTextBox.Enabled = True
+        With ResultTextBox
+            .Enabled = True
+            .Focus()
+        End With
         SubmitResultButton.Enabled = True
         AnalysisResultsLabel.Text = String.Empty
-        ResultTextBox.Focus()
     End Sub
 End Class ' Analysis
 
